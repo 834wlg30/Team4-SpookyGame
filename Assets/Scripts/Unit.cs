@@ -27,14 +27,21 @@ public class Unit : MonoBehaviour
         List<GameObject> unitList = gmObj.GetComponent<GameManager>().selectedUnits;
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            if(!unitList.Contains(this.gameObject))
-            unitList.Add(this.gameObject);
+            if (!unitList.Contains(this.gameObject))
+                unitList.Add(this.gameObject);
         }
         else
         {
             unitList.RemoveRange(0, unitList.Count);
             unitList.Add(this.gameObject);
-
         }
+    }
+
+    
+
+    public void Move(Vector3 d)
+    {
+        Debug.Log(d);
+        transform.position = new Vector3(d.x, d.y, transform.position.z);
     }
 }
