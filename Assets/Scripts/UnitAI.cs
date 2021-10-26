@@ -6,8 +6,8 @@ using Pathfinding;
 public class UnitAI : MonoBehaviour
 {
 
-    public Transform target;
-    public Transform prevTarget;
+    public GameObject target;
+    public GameObject prevTarget;
 
     public float speed = 200f;
     public float nextWaypointDistance = 3f;
@@ -31,9 +31,13 @@ public class UnitAI : MonoBehaviour
 
     void UpdatePath()
     {
-        
-        if(seeker.IsDone() || prevTarget != target)
-            seeker.StartPath(transform.position, target.position, OnPathComplete);
+
+        if (seeker.IsDone() || prevTarget != target)
+        {
+            seeker.StartPath(transform.position, target.transform.position, OnPathComplete);
+            Destroy(prevTarget.gameObject);
+            prevTarget = target;
+        }
     }
 
     void OnPathComplete(Path p)
@@ -65,9 +69,8 @@ public class UnitAI : MonoBehaviour
         }
 
         Vector2 dir = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
-        Vector2 force = dir * speed * Time.deltaTime;
 
-        rb.AddForce(force);
+        transform.position = new Vector3(transform.position.x + dir.x, transform.position.y + dir.y, 0);
 
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 

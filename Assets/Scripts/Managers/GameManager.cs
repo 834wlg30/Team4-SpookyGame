@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
             foreach (GameObject unit in selectedUnits)
             {
                 UnitAI unitAI = unit.GetComponent<UnitAI>();
-                unitAI.target = t.transform;
+                unitAI.target = t;
             }
         }
     }
