@@ -5,10 +5,13 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     public GameObject gmObj;
+    public Transform target;
 
     private void Awake()
     {
         gmObj = GameObject.FindGameObjectWithTag("GM");
+        target = gameObject.transform.GetChild(1);
+
     }
     void Start()
     {
@@ -41,7 +44,6 @@ public class Unit : MonoBehaviour
 
     public void Move(Vector3 d)
     {
-        Debug.Log(d);
-        transform.position = new Vector3(d.x, d.y, transform.position.z);
+        
     }
 }

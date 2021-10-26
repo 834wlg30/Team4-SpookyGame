@@ -26,12 +26,15 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             Debug.Log("RMB Down");
+            stwPoint = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 1));
+            Debug.Log(stwPoint);
+
+            GameObject t = new GameObject();
+            t.transform.position = stwPoint;
             foreach (GameObject unit in selectedUnits)
             {
-                stwPoint = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 1));
-                Debug.Log(stwPoint);
-                Unit unitScript = unit.GetComponent<Unit>();
-                unitScript.Move(stwPoint);
+                UnitAI unitAI = unit.GetComponent<UnitAI>();
+                unitAI.target = t.transform;
             }
         }
     }
