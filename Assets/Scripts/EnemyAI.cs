@@ -12,7 +12,7 @@ public class EnemyAI : MonoBehaviour
     public List<GameObject> players;
     public GameObject randPos;
 
-    public float speed = 200f;
+    public float speed;
     public float nextWaypointDistance = 3f;
     Path path;
     int currentWaypoint = 0;
@@ -38,11 +38,12 @@ public class EnemyAI : MonoBehaviour
         InvokeRepeating("UpdatePath", 0f, .5f);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerStay2D(Collider2D other)
     {
+        Debug.Log("Enemy: Object Detected");
         foreach(GameObject plr in players)
         {
-            if(other == plr)
+            if(other.gameObject.tag == "Player")
             {
                 target = plr.transform;
             }
@@ -77,7 +78,7 @@ public class EnemyAI : MonoBehaviour
         {
             reachedEndOfPath = true;
             rb.velocity = Vector2.zero;
-            randPos.transform.position = new Vector3(Random.Range(0, 20), Random.Range(0, 20), 0);
+            randPos.transform.position = new Vector3(Random.Range(-49, 49), Random.Range(-34, 38), 0);
             target = randPos.transform;
 
             return;
@@ -89,7 +90,7 @@ public class EnemyAI : MonoBehaviour
 
         Vector2 dir = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
 
-        transform.position = new Vector3(transform.position.x + dir.x, transform.position.y+ dir.y, 0);
+        transform.position = new Vector3(transform.position.x + dir.x * speed, transform.position.y+ dir.y * speed, 0);
 
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 

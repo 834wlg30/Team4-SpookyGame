@@ -9,7 +9,7 @@ public class UnitAI : MonoBehaviour
     public GameObject target;
     public GameObject prevTarget;
 
-    public float speed = 200f;
+    public float speed;
     public float nextWaypointDistance = 3f;
     Path path;
     int currentWaypoint = 0;
@@ -70,7 +70,7 @@ public class UnitAI : MonoBehaviour
 
         Vector2 dir = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
 
-        transform.position = new Vector3(transform.position.x + dir.x, transform.position.y + dir.y, 0);
+        transform.position = new Vector3(transform.position.x + dir.x * speed, transform.position.y + dir.y * speed, 0);
 
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 
