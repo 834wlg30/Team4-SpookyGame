@@ -14,6 +14,7 @@ public class FieldOfView : MonoBehaviour
     private float startingAngle;
     public float fov;
     public float viewDistance;
+    public float startIntensity;
 
     public GameObject freeLight;
     public Light2D shapeLight;
@@ -124,7 +125,7 @@ public class FieldOfView : MonoBehaviour
             cloneLight.intensity = 10;
             cloneLight.lightOrder = 1;
         }
-        else cloneLight.intensity = 1f;
+        else cloneLight.intensity = startIntensity;
 
         StartCoroutine(LightFade(cloneLight));
 
