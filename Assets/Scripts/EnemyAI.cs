@@ -93,6 +93,11 @@ public class EnemyAI : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x + dir.x * speed, transform.position.y+ dir.y * speed, 0);
 
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        if (angle < 0) angle += 360; //maybe needed? added because tutorial had lol
+
+        transform.rotation = Quaternion.AngleAxis(angle - 90, transform.forward);
+
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 
         if (distance < nextWaypointDistance)

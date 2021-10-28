@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System.Reflection;
-using UnityEngine.Experimental.Rendering.Universal;
 
-public class FieldOfView : MonoBehaviour
+public class EnemyFOV : MonoBehaviour
 {
     [SerializeField] private LayerMask layerMask;
-
     private Mesh mesh;
-    private Vector3 origin;
-    private float startingAngle;
+    public Vector3 origin;
+    public float startingAngle;
+    public float startingAngleOffset;
     public float fov;
     public float viewDistance;
-    public float startIntensity;
+    public EdgeCollider2D fovTrigger;
+    public MeshCollider meshFovTrigger;
+    public Transform enemy;
 
-    public GameObject freeLight;
-    public Light2D shapeLight;
+    //public GameObject freeLight;
+    //public Light2D shapeLight;
     public GameObject emptyGameObject;
     //private int numLights = 0;
 
@@ -33,12 +34,15 @@ public class FieldOfView : MonoBehaviour
 
     private void LateUpdate()
     {
-        //origin = 
-        bool flash = false;
-        if(Input.GetKeyDown("space"))
-        {
-            flash = true;
-        }
+        origin = enemy.position;
+        //startingAngle = enemy.localEulerAngles.z - startingAngleOffset;
+
+        Vector3 dir = enemy.transform.right;
+        startingAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + (fov / 2f);
+        //startingAngle += (fov / 2f);
+        if (startingAngle < 0) startingAngle += 360; //maybe needed? added because tutorial had lol
+        //bool flash = false;
+
         int rayCount = 50;
         float angle = startingAngle; //0f;
         float angleIncrease = fov / rayCount;
@@ -97,13 +101,19 @@ public class FieldOfView : MonoBehaviour
         mesh.uv = uv;
         mesh.triangles = triangles;
 
+        meshFovTrigger.sharedMesh = mesh;
+
         Vector2[] vertices2D = new Vector2[vertices.Length];
         for(int i=0; i<vertices.Length; i++)
         {
             vertices2D[i] = new Vector2(vertices[i].x, vertices[i].y);
         }
 
-        var shapeLightClone = Instantiate(freeLight.gameObject);
+        fovTrigger.points = vertices2D;
+
+        //StartCoroutine(FOVFade(mesh));
+
+        //var shapeLightClone = Instantiate(freeLight.gameObject);
         //shapeLightClone.name =  numLights.ToString();
         //shapeLightClone.transform.SetSiblingIndex(0);
         //shapeLightClone.transform.position = origin;
@@ -111,45 +121,51 @@ public class FieldOfView : MonoBehaviour
 
         //numLights++;
 
-        Light2D cloneLight = shapeLightClone.GetComponent<Light2D>();
-        shapeLightClone.transform.position = origin;
-        SetShapePath(cloneLight, vertices);
-        shapeLightClone.GetComponent<EdgeCollider2D>().points = vertices2D;
-        shapeLightClone.transform.parent = emptyGameObject.transform;
+        /*  Light2D cloneLight = shapeLightClone.GetComponent<Light2D>();
+            shapeLightClone.transform.position = origin;
+            SetShapePath(cloneLight, vertices);
+            shapeLightClone.GetComponent<EdgeCollider2D>().points = vertices2D;
+            shapeLightClone.transform.parent = emptyGameObject.transform;
 
-        shapeLightClone.layer = 8;
-        cloneLight.lightOrder = 0; //numLights;
+            shapeLightClone.layer = 8;
+            cloneLight.lightOrder = 0; //numLights;
 
-        if (flash)
-        {
-            cloneLight.intensity = 10;
-            cloneLight.lightOrder = 1;
-        }
-        else cloneLight.intensity = startIntensity;
+            if (flash)
+            {
+                cloneLight.intensity = 10;
+                cloneLight.lightOrder = 1;
+            }
+            else cloneLight.intensity = 0.5f;
 
-        StartCoroutine(LightFade(cloneLight));
+            StartCoroutine(LightFade(cloneLight));
 
-        //shapeLightClone.GetComponent<LightShape>() = new Vector3[];
-        //shapeLight.shapePath = vertices;
-    }
+            //shapeLightClone.GetComponent<LightShape>() = new Vector3[];
+            //shapeLight.shapePath = vertices;
+        */
+    } 
 
-    public IEnumerator LightFade(Light2D light)
+    public IEnumerator FOVFade(Mesh fov)
     {
         //light.intensity = 0f;
-        while (light.intensity > 0)
-        {
-            light.intensity -= forgetRate;
-            if (light.intensity <= 0.5f)
-            {
-                light.lightOrder -= 1;
-            }
-            else light.intensity -= 5 * forgetRate;
+        //while (light.intensity > 0)
+        //{
+        //light.intensity -= forgetRate;
+        //if (light.intensity <= 0.5f)
+        //{
+        //light.lightOrder -= 1;
+        //}
+        //else light.intensity -= 5 * forgetRate;
 
-            yield return new WaitForSeconds(0.01f);
-        }
-        Destroy(light.gameObject);
+        //yield return new WaitForSeconds(0.01f);
+        //}
+        //Destroy(light.gameObject);
+
+        yield return new WaitForSeconds(2);
+        Destroy(fov);
+
         //return null;
-    }
+    } 
+   
 
     void SetFieldValue<T>(object obj, string name, T val)
     {
@@ -157,16 +173,11 @@ public class FieldOfView : MonoBehaviour
         field?.SetValue(obj, val);
     }
 
-    void SetShapePath(Light2D light, Vector3[] path)
+    /*void SetShapePath(Light2D light, Vector3[] path)
     {
         SetFieldValue<Vector3[]>(light, "m_ShapePath", path);
-    }
-
-    public void SetOrigin(Vector3 origin)
-    {
-        this.origin = origin;
-    }
-    public void SetAimDirection(float aimDirection) //Vector3 aimDirection)
+    }*/
+    void SetAimDirection(float aimDirection) //Vector3 aimDirection)
     {
         //Vector3 dir = aimDirection.normalized;
         //float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg; //Stuff for getting angle (float) from vector
