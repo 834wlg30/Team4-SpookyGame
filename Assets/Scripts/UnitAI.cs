@@ -6,6 +6,7 @@ using Pathfinding;
 public class UnitAI : MonoBehaviour
 {
     [SerializeField] private FieldOfView fieldOfView;
+    //FieldOfView fieldOfView;
 
     public GameObject target;
     public GameObject prevTarget;
