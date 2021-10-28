@@ -8,6 +8,7 @@ public class UnitAI : MonoBehaviour
 
     public GameObject target;
     public GameObject prevTarget;
+    public Animator animator;
 
     public float speed;
     public float nextWaypointDistance = 3f;
@@ -25,6 +26,9 @@ public class UnitAI : MonoBehaviour
         prevTarget = target;
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+
+        StartCoroutine(WalkCoroutine());
 
         InvokeRepeating("UpdatePath", 0f, .5f);
     }
@@ -76,5 +80,11 @@ public class UnitAI : MonoBehaviour
 
         if (distance < nextWaypointDistance)
             currentWaypoint++;
+    }
+
+    IEnumerator WalkCoroutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        animator.SetTrigger("walkingA");
     }
 }

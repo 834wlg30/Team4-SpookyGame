@@ -40,11 +40,12 @@ public class EnemyAI : MonoBehaviour
 
     public void OnTriggerStay2D(Collider2D other)
     {
-        Debug.Log("Enemy: Object Detected");
+        
         foreach(GameObject plr in players)
         {
             if(other.gameObject.tag == "Player")
             {
+                Debug.Log("Enemy: Player Detected");
                 target = plr.transform;
             }
         }
