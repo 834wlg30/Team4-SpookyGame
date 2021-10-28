@@ -5,6 +5,7 @@ using Pathfinding;
 
 public class UnitAI : MonoBehaviour
 {
+    [SerializeField] private FieldOfView fieldOfView;
 
     public GameObject target;
     public GameObject prevTarget;
@@ -71,6 +72,15 @@ public class UnitAI : MonoBehaviour
         Vector2 dir = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
 
         transform.position = new Vector3(transform.position.x + dir.x * speed, transform.position.y + dir.y * speed, 0);
+
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        if (angle < 0) angle += 360; //maybe needed? added because tutorial had lol
+
+        transform.rotation = Quaternion.AngleAxis(angle - 90, transform.forward);
+
+        fieldOfView.SetAimDirection(angle - 0); //dir.normalized);
+
+        fieldOfView.SetOrigin(rb.position);
 
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
 
