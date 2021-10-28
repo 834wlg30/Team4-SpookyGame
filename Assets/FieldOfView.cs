@@ -8,13 +8,11 @@ using UnityEngine.Experimental.Rendering.Universal;
 public class FieldOfView : MonoBehaviour
 {
     [SerializeField] private LayerMask layerMask;
-
     private Mesh mesh;
     private Vector3 origin;
     private float startingAngle;
     public float fov;
     public float viewDistance;
-    public float startIntensity;
 
     public GameObject freeLight;
     public Light2D shapeLight;
@@ -125,7 +123,7 @@ public class FieldOfView : MonoBehaviour
             cloneLight.intensity = 10;
             cloneLight.lightOrder = 1;
         }
-        else cloneLight.intensity = startIntensity;
+        else cloneLight.intensity = 0.5f;
 
         StartCoroutine(LightFade(cloneLight));
 
